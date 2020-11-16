@@ -2,8 +2,6 @@ package main;
 
 /**
  * A 1 to 5 square piece that can be fitted onto a board.
- * 
- * @author Isaac Thompson
  */
 public class Polyomino {
 
@@ -18,6 +16,6 @@ public class Polyomino {
      * @return New polyomino equivalent to this one.
      */
     public Polyomino copy() {
-        throw new UnsupportedOperationException("To-do");
+        throw new UnsupportedOperationException("copy() not implemented yet");
     }
 }

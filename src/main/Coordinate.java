@@ -2,8 +2,6 @@ package main;
 
 /**
  * An x-y coordinate.
- * 
- * @author Isaac Thompson
  */
 public class Coordinate {
 

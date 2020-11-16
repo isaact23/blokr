@@ -9,13 +9,9 @@ import javax.swing.SwingConstants;
 
 /**
  * Display the game board and polyominos.
- * 
- * @author Isaac Thompson
  */
 public class Display {
 
-    
-    
     public Display() {
         // Create a JFrame window
         JFrame frame = new JFrame("Simple GUI");
