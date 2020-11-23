@@ -10,56 +10,48 @@ public class Board {
     // Board properties and data
     private final int width;
     private final int height;
-    private int[][] squares;
-
-    // Player count and polyomino bags
-    private final int playerCount;
-    private HashMap<Integer, TileBag> tileBagMap;
-    private Stack<Move> moveStack;
+    private int[][] squares; // 0 if empty, others ints for other players
 
     /**
      * Create a game board at its entry state.
      * @param width Squares spanning x direction.
      * @param height Squares spanning y direction.
-     * @param playerCount Number of players including humans and non-humans.
      */
-    public Board(int width, int height, int playerCount) {
+    public Board(int width, int height) {
         // Initialize grid
         this.width = width;
         this.height = height;
         this.squares = new int[width][height];
+    }
 
-        // Initialize full polyomino bags
-        this.playerCount = playerCount;
-        this.tileBagMap = new HashMap<>();
-        for (int i = 0; i < playerCount; i++) {
-            this.tileBagMap.put(i, new TileBag());
+    /**
+     * Print board to terminal.
+     */
+    public void print() {
+        System.out.println();
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                System.out.printf("%c  ", getSymbolForPlayer(
+                        squares[x][y]
+                ));
+            }
+            System.out.println();
         }
+        System.out.println();
     }
 
     /**
-     * @return All possible moves for a given player.
+     * Get symbol for a specified player.
+     * @param player The player number, 0 for none.
      */
-    public Move[] listMoves(int player) {
-        TileBag tileBag = tileBagMap.get(player);
-
-        throw new UnsupportedOperationException("listMoves() not implemented yet");
-    }
-
-    /**
-     * Apply the given move to the board.
-     * @param move The Move object to add to this Board.
-     * @return True if successful, false if not.
-     */
-    public boolean pushMove(Move move) {
-        throw new UnsupportedOperationException("pushMove() not implemented yet");
-    }
-
-    /**
-     * Remove the latest move from the board.
-     * @return True if successful, false if not.
-     */
-    public boolean popMove() {
-        throw new UnsupportedOperationException("popMove() not implemented yet");
+    private char getSymbolForPlayer(int player) {
+        switch (player) {
+            case 0: return '-';
+            case 1: return 'X';
+            case 2: return 'O';
+            case 3: return '#';
+            case 4: return '&';
+        }
+        return '-';
     }
 }

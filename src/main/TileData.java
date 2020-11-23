@@ -59,8 +59,6 @@ public class TileData {
         }
         Coordinate[] coordinates = new Coordinate[size];
 
-        System.out.printf("Polyomino %s has size %s \n", num, size);
-
         // Get all coordinates in the polyomino.
 
         // For most pieces, the square at (0, 0) is occupied.

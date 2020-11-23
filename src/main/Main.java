@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         //Display display = new Display();
-        Board board = new Board(12, 12, 2);
+        GameState gameState = new GameState(12, 12, 2);
+        gameState.printBoard();
     }
 }
