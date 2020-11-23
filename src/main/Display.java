@@ -1,11 +1,7 @@
 package main;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Window;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import java.awt.*;
+import javax.swing.*;
 
 /**
  * Display the game board and polyominos.
@@ -13,8 +9,9 @@ import javax.swing.SwingConstants;
 public class Display {
 
     public Display() {
+
         // Create a JFrame window
-        JFrame frame = new JFrame("Simple GUI");
+        JFrame frame = new JFrame("blokr");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Create a new label

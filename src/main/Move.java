@@ -5,6 +5,6 @@ package main;
  */
 public class Move {
     private int player;
-    private Polyomino polyomino;
+    private Tile tile;
     private Coordinate coordinate;
 }

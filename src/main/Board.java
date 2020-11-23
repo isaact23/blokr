@@ -1,19 +1,21 @@
 package main;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Store data on which players occupy which grid squares.
  */
 public class Board {
     // Board properties and data
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private int[][] squares;
 
     // Player count and polyomino bags
-    private int playerCount;
-    private HashMap<Integer, PolyominoBag> polyominoBagMap;
+    private final int playerCount;
+    private HashMap<Integer, TileBag> tileBagMap;
+    private Stack<Move> moveStack;
 
     /**
      * Create a game board at its entry state.
@@ -29,8 +31,9 @@ public class Board {
 
         // Initialize full polyomino bags
         this.playerCount = playerCount;
+        this.tileBagMap = new HashMap<>();
         for (int i = 0; i < playerCount; i++) {
-            polyominoBagMap.put(i, new PolyominoBag());
+            this.tileBagMap.put(i, new TileBag());
         }
     }
 
@@ -38,8 +41,25 @@ public class Board {
      * @return All possible moves for a given player.
      */
     public Move[] listMoves(int player) {
-        PolyominoBag polyominoBag = polyominoBagMap.get(player);
+        TileBag tileBag = tileBagMap.get(player);
 
         throw new UnsupportedOperationException("listMoves() not implemented yet");
+    }
+
+    /**
+     * Apply the given move to the board.
+     * @param move The Move object to add to this Board.
+     * @return True if successful, false if not.
+     */
+    public boolean pushMove(Move move) {
+        throw new UnsupportedOperationException("pushMove() not implemented yet");
+    }
+
+    /**
+     * Remove the latest move from the board.
+     * @return True if successful, false if not.
+     */
+    public boolean popMove() {
+        throw new UnsupportedOperationException("popMove() not implemented yet");
     }
 }
