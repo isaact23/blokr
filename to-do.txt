@@ -4,8 +4,10 @@ Board, given a TileBag, must return a List<Move> of all possible moves.
 TileBag needs a print function.
 Add CLI (UserInput) so player can input their own moves.
 Add Minimax ADT and Node class so CPU can find best moves.
-Implement GameManager to iterate through all of the players.
+    MAYBE WE SHOULD CONSIDER MONTE CARLO SIMULATION.
+Implement GameManager to iterate through all of the players and get settings at the beginning.
 Create GUI in Display class.
+Add a secondary GUI so the player can configure settings at the beginning.
 
 Less Important:
 In TileBag, only initialize one TileBag, then create deep copies for the rest
