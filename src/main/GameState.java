@@ -40,7 +40,7 @@ public class GameState {
     /**
      * Print the board to the terminal.
      */
-    public void printBoard() {
+    public void print() {
         board.print();
     }
 

@@ -11,6 +11,6 @@ public class Main {
     public static void main(String[] args) {
         //Display display = new Display();
         GameState gameState = new GameState(12, 12, 2);
-        gameState.printBoard();
+        gameState.print();
     }
 }
