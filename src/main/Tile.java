@@ -30,7 +30,6 @@ public class Tile implements Cloneable {
         int orientations = rotations;
         if (canFlip)
             orientations *= 2;
-        System.out.printf("Num. orientations %d\n", orientations);
 
         // Initialize 2D array of coordinates for every orientation
         allCoordinates = new Coordinate[orientations][tileSize];

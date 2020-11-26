@@ -42,7 +42,7 @@ public class TileData {
             size = 2;
         } else if (num < 4) {
             size = 3;
-        } else if (num < 8) {
+        } else if (num < 9) {
             size = 4;
         } else {
             size = 5;
@@ -180,6 +180,13 @@ public class TileData {
                 coordinates[2] = new Coordinate(2, 0);
                 coordinates[3] = new Coordinate(1, 1);
                 coordinates[4] = new Coordinate(1, 2); break;
+            }
+        }
+
+        // Ensure none of the entries are null.
+        for (Coordinate coordinate : coordinates) {
+            if (coordinate == null) {
+                throw new RuntimeException("There is a null element in coordinates.");
             }
         }
 
