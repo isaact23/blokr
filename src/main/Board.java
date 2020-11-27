@@ -16,7 +16,7 @@ public class Board {
 
     private ArrayList<ArrayList<Coordinate>> legalSquares; // Stores legal squares to play on per player
     private Stack<Move> moveStack; // Stack of previously applied moves
-    private HashMap<Integer, TileBag> tileBagMap; // Bags of tiles for all players; start indexing at 1
+    private HashMap<Integer, ArrayList<Tile>> tileListMap; // Lists of tiles for all players; start indexing at 1
 
     /**
      * Create a game board at its entry state.
@@ -28,7 +28,7 @@ public class Board {
         // Initialize grid
         this.width = width;
         this.height = height;
-        this.squares = new int[width][height];
+        initializeSquares();
 
         // Verify player count is within valid range
         this.playerCount = playerCount;
@@ -36,10 +36,10 @@ public class Board {
             throw new InvalidParameterException("playerCount must be in range 2 to 4");
         }
 
-        // Initialize full tile bags for all players
-        this.tileBagMap = new HashMap<>();
+        // Initialize full tile lists for all players
+        this.tileListMap = new HashMap<>();
         for (int i = 1; i <= playerCount; i++) {
-            this.tileBagMap.put(i, new TileBag());
+            this.tileListMap.put(i, new ArrayList<Tile>());
         }
 
         // Initialize legal squares (corners) for all players
@@ -63,7 +63,12 @@ public class Board {
      * @return True if successful, false if not.
      */
     public boolean pushMove(Move move) {
-        throw new UnsupportedOperationException("pushMove() not implemented yet");
+        Tile tile = move.tile;
+        int player = move.player;
+        Coordinate[] coordinates = tile.getCoordinates(player);
+
+        moveStack.push(move);
+        return false;
     }
 
     /**
@@ -72,6 +77,18 @@ public class Board {
      */
     public boolean popMove() {
         throw new UnsupportedOperationException("popMove() not implemented yet");
+    }
+
+    /**
+     * Initialize all squares to -1. This eliminates any confusion with
+     * the player number (0, 1, 2 or 3).
+     */
+    private void initializeSquares() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                squares[x][y] = -1;
+            }
+        }
     }
 
     /**
@@ -119,11 +136,11 @@ public class Board {
      */
     private char getSymbolForPlayer(int player) {
         switch (player) {
-            case 0: return '-';
-            case 1: return 'X';
-            case 2: return 'O';
-            case 3: return '#';
-            case 4: return '&';
+            case -1: return '-';
+            case 0: return 'X';
+            case 1: return 'O';
+            case 2: return '#';
+            case 3: return '&';
         }
         return '-';
     }

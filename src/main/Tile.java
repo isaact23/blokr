@@ -102,6 +102,10 @@ public class Tile implements Cloneable {
         return largestCoord;
     }
 
+    public Coordinate[] getCoordinates(int player) {
+        return allCoordinates[player];
+    }
+
     /**
      * @return New Tile equivalent to this one.
      */
