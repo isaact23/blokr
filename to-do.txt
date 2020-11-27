@@ -1,5 +1,7 @@
 More Important:
-Board, given a TileBag, must return a List<Move> of all possible moves.
+Remove TileBag
+Board must keep a running list of 'legal squares' for players to move. Starts at the corners.
+Board, given a Tile Array List, must return a List<Move> of all possible moves.
 TileBag needs a print function.
 Add CLI (UserInput) so player can input their own moves.
 Add Minimax ADT and Node class so CPU can find best moves.

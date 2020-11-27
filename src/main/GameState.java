@@ -1,5 +1,6 @@
 package main;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -18,15 +19,18 @@ public class GameState {
 
     /**
      * Initialize a GameState for the beginning of a game.
-     * @param boardWidth Squares spanning board in x direction.
-     * @param boardHeight Squares spanning board in y direction.
-     * @param playerCount Number of players including humans and non-humans.
+     * @param width Squares spanning board in x direction.
+     * @param height Squares spanning board in y direction.
+     * @param playerCount Number of players including humans and non-humans (2-4).
      */
-    public GameState(int boardWidth, int boardHeight, int playerCount) {
+    public GameState(int width, int height, int playerCount) {
         // Initialize empty board
-        this.board = new Board(boardWidth, boardHeight);
+        this.board = new Board(width, height, playerCount);
 
         this.playerCount = playerCount;
+        if (playerCount < 2 || playerCount > 4) {
+            throw new InvalidParameterException("playerCount must be in range 2 to 4");
+        }
 
         // Initialize full tile bags for all players
         this.tileBagMap = new HashMap<>();

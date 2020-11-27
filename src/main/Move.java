@@ -6,5 +6,6 @@ package main;
 public class Move {
     private int player;
     private Tile tile;
-    private Coordinate coordinate;
+    private int tileIndex;
+    private Coordinate coordinate; // Upper-left coordinate
 }
