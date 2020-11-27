@@ -1,34 +1,50 @@
 package main;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 /**
  * Store data on which players occupy which grid squares.
  */
 public class Board {
-    // Board properties and data
     private final int width;
     private final int height;
+    private final int playerCount;
     private int[][] squares; // 0 if empty, other ints for other players
+
     private ArrayList<ArrayList<Coordinate>> legalSquares; // Stores legal squares to play on per player
     private Stack<Move> moveStack; // Stack of previously applied moves
+    private HashMap<Integer, TileBag> tileBagMap; // Bags of tiles for all players; start indexing at 1
 
     /**
      * Create a game board at its entry state.
      * @param width Squares spanning x direction.
      * @param height Squares spanning y direction.
-     * @param players Number of players.
+     * @param playerCount Number of players (2-4).
      */
-    public Board(int width, int height, int players) {
+    public Board(int width, int height, int playerCount) {
         // Initialize grid
         this.width = width;
         this.height = height;
         this.squares = new int[width][height];
 
+        // Verify player count is within valid range
+        this.playerCount = playerCount;
+        if (playerCount < 2 || playerCount > 4) {
+            throw new InvalidParameterException("playerCount must be in range 2 to 4");
+        }
+
+        // Initialize full tile bags for all players
+        this.tileBagMap = new HashMap<>();
+        for (int i = 1; i <= playerCount; i++) {
+            this.tileBagMap.put(i, new TileBag());
+        }
+
         // Initialize legal squares (corners) for all players
         this.legalSquares = new ArrayList<>();
-        initializeLegalSquares(players);
+        initializeLegalSquares(playerCount);
     }
 
     /**
@@ -46,8 +62,8 @@ public class Board {
      * @param move The move object with tile data, location and player.
      * @return True if successful, false if not.
      */
-    public boolean applyMove(Move move) {
-        throw new UnsupportedOperationException("applyMove() not implemented yet");
+    public boolean pushMove(Move move) {
+        throw new UnsupportedOperationException("pushMove() not implemented yet");
     }
 
     /**
@@ -64,19 +80,19 @@ public class Board {
      */
     private void initializeLegalSquares(int players) {
         // Player 1
-        legalSquares.set(0, new ArrayList<Coordinate>());
+        legalSquares.add(0, new ArrayList<Coordinate>());
         legalSquares.get(0).add(new Coordinate(0, 0));
         // Player 2
-        legalSquares.set(1, new ArrayList<Coordinate>());
+        legalSquares.add(1, new ArrayList<Coordinate>());
         legalSquares.get(1).add(new Coordinate(width - 1, height - 1));
         if (players >= 3) {
             // Player 3
-            legalSquares.set(2, new ArrayList<Coordinate>());
+            legalSquares.add(2, new ArrayList<Coordinate>());
             legalSquares.get(2).add(new Coordinate(width - 1, 0));
         }
         if (players >= 4) {
             // Player 4
-            legalSquares.set(3, new ArrayList<Coordinate>());
+            legalSquares.add(3, new ArrayList<Coordinate>());
             legalSquares.get(3).add(new Coordinate(0, height - 1));
         }
     }
