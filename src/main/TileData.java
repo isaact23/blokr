@@ -18,7 +18,7 @@ public class TileData {
         if (allTiles == null) {
             allTiles = new Tile[TILE_COUNT];
             for (int i = 0; i < TILE_COUNT; i++) {
-                allTiles[i] = getTileByNumber(i);
+                allTiles[i] = getTileById(i);
             }
         }
         return allTiles;
@@ -26,23 +26,23 @@ public class TileData {
 
     /**
      * Get list of coordinates for the specified polyomino.
-     * @param num The polyomino number (0 - 20)
+     * @param id The polyomino idber (0 - 20)
      * @return A tile object.
      */
-    private static Tile getTileByNumber(int num) {
-        if (num < 0 || num > 20) {
-            throw new InvalidParameterException("num must be between 0 and 20");
+    private static Tile getTileById(int id) {
+        if (id < 0 || id > 20) {
+            throw new InvalidParameterException("id must be between 0 and 20");
         }
 
         // Get size of polyomino and initialize a list of coordinates with that size.
         int size;
-        if (num < 1) {
+        if (id < 1) {
             size = 1;
-        } else if (num < 2) {
+        } else if (id < 2) {
             size = 2;
-        } else if (num < 4) {
+        } else if (id < 4) {
             size = 3;
-        } else if (num < 9) {
+        } else if (id < 9) {
             size = 4;
         } else {
             size = 5;
@@ -56,7 +56,7 @@ public class TileData {
         // For most pieces, the square at (0, 0) is occupied.
         coordinates[0] = new Coordinate(0, 0);
 
-        switch (num) {
+        switch (id) {
             // 2 squares
             case 1: {
                 rotations = 2;
@@ -190,6 +190,6 @@ public class TileData {
             }
         }
 
-        return new Tile(coordinates, canFlip, rotations);
+        return new Tile(coordinates, id, canFlip, rotations);
     }
 }

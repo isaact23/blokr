@@ -5,16 +5,21 @@ package main;
  */
 public class Tile implements Cloneable {
 
-    private int tileSize;
-
     // List of coordinates for all rotations of the piece.
     private Coordinate[][] allCoordinates;
 
+    // The UNIQUE ID of this tile. Any tile with a different shape will have a different ID.
+    private final int tileId;
+
+    // Number of squares in a tile.
+    private final int tileSize;
+
     // Properties defining how a tile can be flipped/rotated to create new tiles.
-    private boolean canFlip;
-    private int rotations; // Number of unique rotations
+    private final boolean canFlip;
+    private final int rotations; // Number of unique rotations
     
-    public Tile(Coordinate[] coordinates, boolean canFlip, int rotations) {
+    public Tile(Coordinate[] coordinates, int tileId, boolean canFlip, int rotations) {
+        this.tileId = tileId;
         this.tileSize = coordinates.length;
         this.canFlip = canFlip;
         this.rotations = rotations;

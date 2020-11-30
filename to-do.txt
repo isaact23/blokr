@@ -1,6 +1,4 @@
 More Important:
-Remove TileBag
-Board must keep a running list of 'legal squares' for players to move. Starts at the corners.
 Board, given a Tile Array List, must return a List<Move> of all possible moves.
 TileBag needs a print function.
 Add CLI (UserInput) so player can input their own moves.
@@ -11,5 +9,5 @@ Create GUI in Display class.
 Add a secondary GUI so the player can configure settings at the beginning.
 
 Less Important:
-In TileBag, only initialize one TileBag, then create deep copies for the rest
+Create a Tile List container class(?)
 Make TileBag implement Iterable

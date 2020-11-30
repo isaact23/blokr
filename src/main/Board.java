@@ -16,7 +16,7 @@ public class Board {
 
     private ArrayList<ArrayList<Coordinate>> legalSquares; // Stores legal squares to play on per player
     private Stack<Move> moveStack; // Stack of previously applied moves
-    private HashMap<Integer, ArrayList<Tile>> tileListMap; // Lists of tiles for all players; start indexing at 1
+    private HashMap<Integer, TileList> tileListMap; // Lists of tiles for all players; start indexing at 1
 
     /**
      * Create a game board at its entry state.
@@ -39,7 +39,7 @@ public class Board {
         // Initialize full tile lists for all players
         this.tileListMap = new HashMap<>();
         for (int i = 1; i <= playerCount; i++) {
-            this.tileListMap.put(i, new ArrayList<Tile>());
+            this.tileListMap.put(i, new TileList());
         }
 
         // Initialize legal squares (corners) for all players
@@ -53,7 +53,7 @@ public class Board {
      * @param tileList The tiles available for the player.
      * @return ArrayList of legal moves.
      */
-    public ArrayList<Move> listMoves(int player, ArrayList<Tile> tileList) {
+    public ArrayList<Move> listMoves(int player, TileList tileList) {
         throw new UnsupportedOperationException("listMoves() not implemented yet");
     }
 
@@ -84,6 +84,7 @@ public class Board {
      * the player number (0, 1, 2 or 3).
      */
     private void initializeSquares() {
+        this.squares = new int[this.width][this.height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 squares[x][y] = -1;
