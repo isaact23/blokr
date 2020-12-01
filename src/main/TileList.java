@@ -61,7 +61,7 @@ public class TileList implements Iterable<Tile> {
      * An iterator that iterates through the Tiles in tileArray.
      */
     private class TileIterator implements Iterator<Tile> {
-        private int index = 0;
+        private int index = -1;
         private int tilesReturned = 0;
 
         /**
@@ -78,6 +78,8 @@ public class TileList implements Iterable<Tile> {
         @Override
         public Tile next() {
             tilesReturned++;
+
+            index++;
             while (TileList.this.tileArray[index] == null) {
                 index++;
                 if (index >= TileList.this.tileArray.length) {
