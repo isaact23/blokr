@@ -28,6 +28,13 @@ public class Tile implements Cloneable {
     }
 
     /**
+     * @return This tile's unique ID.
+     */
+    public int getId() {
+        return tileId;
+    }
+
+    /**
      * Rotate and flip the piece to generate all unique sets of coordinates.
      * @param coordinates The coordinates for the squares in the tile.
      */

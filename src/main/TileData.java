@@ -103,57 +103,57 @@ public class TileData {
             }
             // 5 squares
             case 9: {
-                canFlip = true;
-                rotations = 4;
+                rotations = 2;
                 coordinates[1] = new Coordinate(1, 0);
                 coordinates[2] = new Coordinate(2, 0);
                 coordinates[3] = new Coordinate(3, 0);
-                coordinates[4] = new Coordinate(0, 1); break;
+                coordinates[4] = new Coordinate(4, 0); break;
             } case 10: {
                 canFlip = true;
                 rotations = 4;
                 coordinates[1] = new Coordinate(1, 0);
                 coordinates[2] = new Coordinate(2, 0);
                 coordinates[3] = new Coordinate(3, 0);
-                coordinates[4] = new Coordinate(1, 1); break;
+                coordinates[4] = new Coordinate(0, 1); break;
             } case 11: {
+                canFlip = true;
+                rotations = 4;
+                coordinates[1] = new Coordinate(1, 0);
+                coordinates[2] = new Coordinate(2, 0);
+                coordinates[3] = new Coordinate(3, 0);
+                coordinates[4] = new Coordinate(1, 1); break;
+            } case 12: {
                 canFlip = true;
                 rotations = 4;
                 coordinates[1] = new Coordinate(1, 0);
                 coordinates[2] = new Coordinate(2, 0);
                 coordinates[3] = new Coordinate(0, 1);
                 coordinates[4] = new Coordinate(1, 1); break;
-            } case 12: {
+            } case 13: {
                 canFlip = true;
                 rotations = 2;
                 coordinates[1] = new Coordinate(1, 0);
                 coordinates[2] = new Coordinate(1, 1);
                 coordinates[3] = new Coordinate(1, 2);
                 coordinates[4] = new Coordinate(2, 2); break;
-            } case 13: {
-                rotations = 4;
-                coordinates[1] = new Coordinate(1, 0);
-                coordinates[2] = new Coordinate(0, 1);
-                coordinates[3] = new Coordinate(0, 2);
-                coordinates[4] = new Coordinate(1, 2); break;
             } case 14: {
-                rotations = 4;
-                coordinates[1] = new Coordinate(1, 0);
-                coordinates[2] = new Coordinate(1, 1);
-                coordinates[3] = new Coordinate(2, 1);
-                coordinates[4] = new Coordinate(2, 2); break;
-            } case 15: {
                 coordinates[0] = new Coordinate(1, 0);
                 coordinates[1] = new Coordinate(1, 1);
                 coordinates[2] = new Coordinate(1, 2);
                 coordinates[3] = new Coordinate(0, 1);
                 coordinates[4] = new Coordinate(2, 1); break;
-            } case 16: {
-                rotations = 2;
+            } case 15: {
+                rotations = 4;
                 coordinates[1] = new Coordinate(1, 0);
-                coordinates[2] = new Coordinate(2, 0);
-                coordinates[3] = new Coordinate(3, 0);
-                coordinates[4] = new Coordinate(4, 0); break;
+                coordinates[2] = new Coordinate(1, 1);
+                coordinates[3] = new Coordinate(2, 1);
+                coordinates[4] = new Coordinate(2, 2); break;
+            } case 16: {
+                rotations = 4;
+                coordinates[1] = new Coordinate(1, 0);
+                coordinates[2] = new Coordinate(0, 1);
+                coordinates[3] = new Coordinate(0, 2);
+                coordinates[4] = new Coordinate(1, 2); break;
             } case 17: {
                 canFlip = true;
                 rotations = 4;
