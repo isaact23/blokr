@@ -21,7 +21,11 @@ public class TileData {
                 allTiles[i] = getTileById(i);
             }
         }
-        return allTiles;
+        Tile[] tilesClone = new Tile[TILE_COUNT];
+        for (int i = 0; i < TILE_COUNT; i++) {
+            tilesClone[i] = allTiles[i].clone();
+        }
+        return tilesClone;
     }
 
     /**

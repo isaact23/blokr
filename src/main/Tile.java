@@ -6,7 +6,7 @@ package main;
 public class Tile implements Cloneable {
 
     // List of coordinates for all rotations of the piece.
-    private Coordinate[][] allCoordinates;
+    private final Coordinate[][] allCoordinates;
 
     // The UNIQUE ID of this tile. Any tile with a different shape will have a different ID.
     private final int tileId;
@@ -17,14 +17,35 @@ public class Tile implements Cloneable {
     // Properties defining how a tile can be flipped/rotated to create new tiles.
     private final boolean canFlip;
     private final int rotations; // Number of unique rotations
-    
+
+    /**
+     * Construct a tile with only one set of coordinates.
+     * @param coordinates All coordinates within this tile.
+     * @param tileId The unique identifier for this tile.
+     * @param canFlip Whether flipping returns a unique form.
+     * @param rotations How many rotations produces a unique form.
+     */
     public Tile(Coordinate[] coordinates, int tileId, boolean canFlip, int rotations) {
         this.tileId = tileId;
         this.tileSize = coordinates.length;
         this.canFlip = canFlip;
         this.rotations = rotations;
+        this.allCoordinates = generateCoordinates(coordinates);
+    }
 
-        this.generateCoordinates(coordinates);
+    /**
+     * Construct a tile with all sets of coordinates.
+     * @param allCoordinates All coordinates within this tile in all orientations.
+     * @param tileId The unique identifier for this tile.
+     * @param canFlip Whether flipping returns a unique form.
+     * @param rotations How many rotations produces a unique form.
+     */
+    public Tile(Coordinate[][] allCoordinates, int tileId, boolean canFlip, int rotations) {
+        this.tileId = tileId;
+        this.tileSize = allCoordinates[0].length;
+        this.canFlip = canFlip;
+        this.rotations = rotations;
+        this.allCoordinates = allCoordinates;
     }
 
     /**
@@ -37,27 +58,29 @@ public class Tile implements Cloneable {
     /**
      * Rotate and flip the piece to generate all unique sets of coordinates.
      * @param coordinates The coordinates for the squares in the tile.
+     * @return A two-dimensional array of all sets of coordinates.
      */
-    private void generateCoordinates(Coordinate[] coordinates) {
+    private Coordinate[][] generateCoordinates(Coordinate[] coordinates) {
         int orientations = rotations;
         if (canFlip)
             orientations *= 2;
 
         // Initialize 2D array of coordinates for every orientation
-        allCoordinates = new Coordinate[orientations][tileSize];
-        allCoordinates[0] = coordinates;
+        Coordinate[][] coordinateArray = new Coordinate[orientations][tileSize];
+        coordinateArray[0] = coordinates;
 
         // Generate all rotations first
         for (int i = 1; i < rotations; i++) {
-            allCoordinates[i] = rotate(allCoordinates[i - 1]);
+            coordinateArray[i] = rotate(coordinateArray[i - 1]);
         }
 
         // Flip pieces if applicable
         if (canFlip) {
             for (int i = 0; i < rotations; i++) {
-                allCoordinates[i + rotations] = flip(allCoordinates[i]);
+                coordinateArray[i + rotations] = flip(coordinateArray[i]);
             }
         }
+        return coordinateArray;
     }
 
     /**
@@ -102,16 +125,17 @@ public class Tile implements Cloneable {
      * @return Largest X and Y values as a coordinate.
      */
     private Coordinate getBoundingCoord(Coordinate[] coordinates) {
-        Coordinate largestCoord = new Coordinate(0, 0);
+        int largestX = 0;
+        int largestY = 0;
         for (Coordinate coordinate : coordinates) {
-            if (coordinate.x > largestCoord.x) {
-                largestCoord.x = coordinate.x;
+            if (coordinate.x > largestX) {
+                largestX = coordinate.x;
             }
-            if (coordinate.y > largestCoord.y) {
-                largestCoord.y = coordinate.y;
+            if (coordinate.y > largestY) {
+                largestY = coordinate.y;
             }
         }
-        return largestCoord;
+        return new Coordinate(largestX, largestY);
     }
 
     public Coordinate[] getCoordinates(int player) {
@@ -119,9 +143,18 @@ public class Tile implements Cloneable {
     }
 
     /**
+     * Deep copy this tile.
      * @return New Tile equivalent to this one.
      */
     public Tile clone() {
-        throw new UnsupportedOperationException("clone() not implemented yet");
+        int boardWidth = allCoordinates.length;
+        int boardHeight = allCoordinates[0].length;
+        Coordinate[][] newCoordinates = new Coordinate[boardWidth][boardHeight];
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
+                newCoordinates[x][y] = allCoordinates[x][y].clone();
+            }
+        }
+        return new Tile(newCoordinates, this.tileId, this.canFlip, this.rotations);
     }
 }

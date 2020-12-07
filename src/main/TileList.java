@@ -62,14 +62,13 @@ public class TileList implements Iterable<Tile> {
      */
     private class TileIterator implements Iterator<Tile> {
         private int index = -1;
-        private int tilesReturned = 0;
 
         /**
          * @return True if there is another Tile to be returned by next().
          */
         @Override
         public boolean hasNext() {
-            return tilesReturned < TileList.this.tileArray.length;
+            return index + 1 < tileArray.length;
         }
 
         /**
@@ -77,14 +76,13 @@ public class TileList implements Iterable<Tile> {
          */
         @Override
         public Tile next() {
-            tilesReturned++;
-
             index++;
-            while (TileList.this.tileArray[index] == null) {
+            while (index < TileList.this.tileArray.length &&
+                    TileList.this.tileArray[index] == null) {
                 index++;
-                if (index >= TileList.this.tileArray.length) {
-                    throw new NoSuchElementException("There are no more tiles.");
-                }
+            }
+            if (index >= TileList.this.tileArray.length) {
+                throw new NoSuchElementException("There are no more tiles.");
             }
             return TileList.this.tileArray[index];
         }
