@@ -3,6 +3,7 @@ package main;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Stack;
 
 /**
@@ -36,39 +37,129 @@ public class Board {
             throw new InvalidParameterException("playerCount must be in range 2 to 4");
         }
 
-        // Initialize full tile lists for all players
-        this.tileListMap = new HashMap<>();
-        for (int i = 1; i <= playerCount; i++) {
-            this.tileListMap.put(i, new TileList());
-        }
-
         // Initialize legal squares (corners) for all players
         this.legalSquares = new ArrayList<>();
         initializeLegalSquares(playerCount);
+
+        // Initialize empty move stack
+        this.moveStack = new Stack<Move>();
+
+        // Initialize full tile lists for all players
+        this.tileListMap = new HashMap<>();
+        for (int i = 0; i < playerCount; i++) {
+            this.tileListMap.put(i, new TileList());
+        }
     }
 
     /**
      * List all possible moves for specified player.
+     * This implementation DOES NOT CHANGE legalSquares.
      * @param player The player to list moves for.
-     * @param tileList The tiles available for the player.
      * @return ArrayList of legal moves.
      */
-    public ArrayList<Move> listMoves(int player, TileList tileList) {
-        throw new UnsupportedOperationException("listMoves() not implemented yet");
+    public ArrayList<Move> listMoves(int player) {
+        ArrayList<Move> moves = new ArrayList<Move>();
+        // Iterate through tiles
+        Iterator<Tile> tileIterator = tileListMap.get(player).iterator();
+        while (tileIterator.hasNext()) {
+            Tile tile = tileIterator.next();
+
+            // Iterate through orientations for each tile
+            Coordinate[][] allCoordinates = tile.getAllCoordinates();
+            for (int orientation = 0; orientation < allCoordinates.length; orientation++) {
+                Coordinate[] coordinates = allCoordinates[orientation];
+
+                // Iterate through valid coordinates on the grid
+                Coordinate boundingCoord = Tile.getBoundingCoord(coordinates);
+                for (int x = 0; x < width - boundingCoord.x; x++) {
+                    for (int y = 0; y < height - boundingCoord.y; y++) {
+                        boolean selfCorner = false; // Must be true
+                        boolean startingPoint = false; // Can be true to substitute selfCorner
+                        boolean selfEdge = false; // Must be false
+                        boolean overlap = false; // Must be false
+
+                        Coordinate legalSquare = legalSquares.get(player).get(0);
+                        // Iterate through squares in this set of coordinates; ensure all represent legal positions
+                        for (int j = 0; j < coordinates.length; j++) {
+                            Coordinate coord = coordinates[j];
+                            // Check if we're starting in our corner
+                            if (legalSquare.x == coord.x && legalSquare.y == coord.y) {
+                                startingPoint = true;
+                            }
+                            // Check corners/edges
+                            if (squares[x + coord.x][y + coord.y] != -1) {
+                                overlap = true;
+                                break;
+                            }
+                            if (coord.x > 0) {
+                                if (squares[coord.x - 1][coord.y] == player) {
+                                    selfEdge = true;
+                                    break;
+                                }
+                                if (coord.y > 0) {
+                                    if (squares[coord.x - 1][coord.y - 1] == player) {
+                                        selfCorner = true;
+                                    }
+                                }
+                                if (coord.y < height - 1) {
+                                    if (squares[coord.x - 1][coord.y + 1] == player) {
+                                        selfCorner = true;
+                                    }
+                                }
+                            }
+                            if (coord.y > 0 && squares[coord.x][coord.y - 1] == player) {
+                                selfEdge = true;
+                                break;
+                            }
+                            if (coord.y < height - 1 && squares[coord.x][coord.y + 1] == player) {
+                                selfEdge = true;
+                                break;
+                            }
+                            if (coord.x < width - 1) {
+                                if (squares[coord.x + 1][coord.y] == player) {
+                                    selfEdge = true;
+                                    break;
+                                }
+                                if (coord.y > 0) {
+                                    if (squares[coord.x + 1][coord.y - 1] == player) {
+                                        selfCorner = true;
+                                    }
+                                }
+                                if (coord.y < height - 1) {
+                                    if (squares[coord.x + 1][coord.y + 1] == player) {
+                                        selfCorner = true;
+                                    }
+                                }
+                            }
+                        }
+                        // If the move passes the checks, add to list
+                        if ((selfCorner || startingPoint) && !selfEdge && !overlap) {
+                            moves.add(
+                                    new Move(player, tile, orientation, new Coordinate(x, y))
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        return moves;
     }
 
     /**
      * Add the specified move to the board.
      * @param move The move object with tile data, location and player.
-     * @return True if successful, false if not.
      */
-    public boolean pushMove(Move move) {
+    public void pushMove(Move move) {
         Tile tile = move.tile;
-        int player = move.player;
-        Coordinate[] coordinates = tile.getCoordinates(player);
-
+        Coordinate[] coordinates = tile.getCoordinates(move.tileOrientation);
+        for (int i = 0; i < coordinates.length; i++) {
+            Coordinate coord = coordinates[i];
+            if (squares[coord.x][coord.y] != -1) {
+                throw new RuntimeException("Cannot push move: Move overlaps existing pieces.");
+            }
+            squares[coord.x][coord.y] = move.player;
+        }
         moveStack.push(move);
-        return false;
     }
 
     /**

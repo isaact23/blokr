@@ -19,4 +19,6 @@ public class Coordinate implements Cloneable {
     public Coordinate clone() {
         return new Coordinate(this.x, this.y);
     }
+
+    public void print() { System.out.printf("%d %d\n", x, y); }
 }
