@@ -15,16 +15,26 @@ public class Main {
 
     public static void main(String[] args) {
         //Display display = new Display();
-        Board board = new Board(8, 8, 2);
-        ArrayList<Move> moves = board.listMoves(0);
-        //for (int i = 0; i < moves.size(); i++) {
-        //    System.out.printf("Piece %d\n", moves.get(i).tile.getId());
-        //}
-
+        Board board = new Board(8, 8, 1);
+        ArrayList<Move> moves;
         Random rand = new Random();
-        int randint = rand.nextInt(moves.size());
-        board.pushMove(moves.get(randint));
+        int randint;
+        while (true) {
+            moves = board.listMoves(0);
+            if (moves.size() == 0) {
+                break;
+            }
+            randint = rand.nextInt(moves.size());
+            board.pushMove(moves.get(randint));
+            board.print();
+        }
+    }
 
-        board.print();
+    private void timeListMoves() {
+        Board board = new Board(8, 8, 2);
+        long startTime = System.nanoTime();
+        ArrayList<Move> moves = board.listMoves(0);
+        long endTime = System.nanoTime();
+        System.out.println("That took " + ((endTime - startTime) / 1000000) + " milliseconds");
     }
 }

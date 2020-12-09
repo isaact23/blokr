@@ -14,8 +14,8 @@ public class Board {
     private final int height;
     private final int playerCount;
     private int[][] squares; // 0 if empty, other ints for other players
+    private boolean[][][] legalSquares; // x, y, player
 
-    private ArrayList<ArrayList<Coordinate>> legalSquares; // Stores legal squares to play on per player
     private Stack<Move> moveStack; // Stack of previously applied moves
     private HashMap<Integer, TileList> tileListMap; // Lists of tiles for all players; start indexing at 1
 
@@ -33,12 +33,11 @@ public class Board {
 
         // Verify player count is within valid range
         this.playerCount = playerCount;
-        if (playerCount < 2 || playerCount > 4) {
-            throw new InvalidParameterException("playerCount must be in range 2 to 4");
+        if (playerCount < 1 || playerCount > 4) {
+            throw new InvalidParameterException("playerCount must be in range 1 to 4");
         }
 
         // Initialize legal squares (corners) for all players
-        this.legalSquares = new ArrayList<>();
         initializeLegalSquares(playerCount);
 
         // Initialize empty move stack
@@ -53,7 +52,7 @@ public class Board {
 
     /**
      * List all possible moves for specified player.
-     * This implementation DOES NOT CHANGE legalSquares.
+     * This implementation DOES NOT ADD TO legalSquares.
      * @param player The player to list moves for.
      * @return ArrayList of legal moves.
      */
@@ -61,6 +60,7 @@ public class Board {
         ArrayList<Move> moves = new ArrayList<Move>();
         // Iterate through tiles
         Iterator<Tile> tileIterator = tileListMap.get(player).iterator();
+
         while (tileIterator.hasNext()) {
             Tile tile = tileIterator.next();
 
@@ -78,12 +78,11 @@ public class Board {
                         boolean selfEdge = false; // Must be false
                         boolean overlap = false; // Must be false
 
-                        Coordinate legalSquare = legalSquares.get(player).get(0);
                         // Iterate through squares in this set of coordinates; ensure all represent legal positions
                         for (int j = 0; j < coordinates.length; j++) {
                             Coordinate coord = coordinates[j];
                             // Check if we're starting in our corner
-                            if (legalSquare.x == coord.x && legalSquare.y == coord.y) {
+                            if (legalSquares[x + coord.x][y + coord.y][player]) {
                                 startingPoint = true;
                             }
                             // Check corners/edges
@@ -91,42 +90,42 @@ public class Board {
                                 overlap = true;
                                 break;
                             }
-                            if (coord.x > 0) {
-                                if (squares[coord.x - 1][coord.y] == player) {
+                            if (x + coord.x > 0) {
+                                if (squares[x + coord.x - 1][y + coord.y] == player) {
                                     selfEdge = true;
                                     break;
                                 }
-                                if (coord.y > 0) {
-                                    if (squares[coord.x - 1][coord.y - 1] == player) {
+                                if (y + coord.y > 0) {
+                                    if (squares[x + coord.x - 1][y + coord.y - 1] == player) {
                                         selfCorner = true;
                                     }
                                 }
-                                if (coord.y < height - 1) {
-                                    if (squares[coord.x - 1][coord.y + 1] == player) {
+                                if (y + coord.y < height - 1) {
+                                    if (squares[x + coord.x - 1][y + coord.y + 1] == player) {
                                         selfCorner = true;
                                     }
                                 }
                             }
-                            if (coord.y > 0 && squares[coord.x][coord.y - 1] == player) {
+                            if (y + coord.y > 0 && squares[x + coord.x][y + coord.y - 1] == player) {
                                 selfEdge = true;
                                 break;
                             }
-                            if (coord.y < height - 1 && squares[coord.x][coord.y + 1] == player) {
+                            if (y + coord.y < height - 1 && squares[x + coord.x][y + coord.y + 1] == player) {
                                 selfEdge = true;
                                 break;
                             }
-                            if (coord.x < width - 1) {
-                                if (squares[coord.x + 1][coord.y] == player) {
+                            if (x + coord.x < width - 1) {
+                                if (squares[x + coord.x + 1][y + coord.y] == player) {
                                     selfEdge = true;
                                     break;
                                 }
-                                if (coord.y > 0) {
-                                    if (squares[coord.x + 1][coord.y - 1] == player) {
+                                if (y + coord.y > 0) {
+                                    if (squares[x + coord.x + 1][y + coord.y - 1] == player) {
                                         selfCorner = true;
                                     }
                                 }
-                                if (coord.y < height - 1) {
-                                    if (squares[coord.x + 1][coord.y + 1] == player) {
+                                if (y + coord.y < height - 1) {
+                                    if (squares[x + coord.x + 1][y + coord.y + 1] == player) {
                                         selfCorner = true;
                                     }
                                 }
@@ -149,17 +148,22 @@ public class Board {
      * Add the specified move to the board.
      * @param move The move object with tile data, location and player.
      */
+    // TODO: Add new legal squares
     public void pushMove(Move move) {
         Tile tile = move.tile;
         Coordinate[] coordinates = tile.getCoordinates(move.tileOrientation);
         for (int i = 0; i < coordinates.length; i++) {
             Coordinate coord = coordinates[i];
+            legalSquares[coord.x][coord.y][move.player] = false;
             if (squares[coord.x][coord.y] != -1) {
+                coord.print();
+                System.out.println(tile.getId());
                 throw new RuntimeException("Cannot push move: Move overlaps existing pieces.");
             }
-            squares[coord.x][coord.y] = move.player;
+            squares[move.coordinate.x + coord.x][move.coordinate.y + coord.y] = move.player;
         }
         moveStack.push(move);
+        tileListMap.get(move.player).pop(tile.getId());
     }
 
     /**
@@ -188,22 +192,21 @@ public class Board {
      * @param players Number of players in this game.
      */
     private void initializeLegalSquares(int players) {
-        // Player 1
-        legalSquares.add(0, new ArrayList<Coordinate>());
-        legalSquares.get(0).add(new Coordinate(0, 0));
-        // Player 2
-        legalSquares.add(1, new ArrayList<Coordinate>());
-        legalSquares.get(1).add(new Coordinate(width - 1, height - 1));
-        if (players >= 3) {
-            // Player 3
-            legalSquares.add(2, new ArrayList<Coordinate>());
-            legalSquares.get(2).add(new Coordinate(width - 1, 0));
+        legalSquares = new boolean[width][height][playerCount];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int p = 0; p < playerCount; p++) {
+                    legalSquares[x][y][p] = false;
+                }
+            }
         }
-        if (players >= 4) {
-            // Player 4
-            legalSquares.add(3, new ArrayList<Coordinate>());
-            legalSquares.get(3).add(new Coordinate(0, height - 1));
-        }
+        legalSquares[0][0][0] = true;
+        if (playerCount > 1)
+            legalSquares[width - 1][height - 1][1] = true;
+        if (playerCount > 2)
+            legalSquares[0][height - 1][2] = true;
+        if (playerCount > 3)
+            legalSquares[width - 1][0][3] = true;
     }
 
     /**
