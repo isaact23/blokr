@@ -132,7 +132,7 @@ public class Board {
                             }
                         }
                         // If the move passes the checks, add to list
-                        if ((selfCorner || startingPoint) && !selfEdge && !overlap) {
+                        if ((selfCorner || startingPoint) && (!selfEdge) && (!overlap)) {
                             moves.add(
                                     new Move(player, tile, orientation, new Coordinate(x, y))
                             );
@@ -154,13 +154,11 @@ public class Board {
         Coordinate[] coordinates = tile.getCoordinates(move.tileOrientation);
         for (int i = 0; i < coordinates.length; i++) {
             Coordinate coord = coordinates[i];
-            legalSquares[coord.x][coord.y][move.player] = false;
-            if (squares[coord.x][coord.y] != -1) {
-                coord.print();
-                System.out.println(tile.getId());
+            if (squares[move.coordinate.x + coord.x][move.coordinate.y + coord.y] != -1) {
                 throw new RuntimeException("Cannot push move: Move overlaps existing pieces.");
             }
             squares[move.coordinate.x + coord.x][move.coordinate.y + coord.y] = move.player;
+            legalSquares[move.coordinate.x + coord.x][move.coordinate.y + coord.y][move.player] = false;
         }
         moveStack.push(move);
         tileListMap.get(move.player).pop(tile.getId());

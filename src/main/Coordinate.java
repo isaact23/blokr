@@ -20,5 +20,15 @@ public class Coordinate implements Cloneable {
         return new Coordinate(this.x, this.y);
     }
 
-    public void print() { System.out.printf("%d %d\n", x, y); }
+    /**
+     * Print this coordinate to terminal.
+     */
+    public void print() { System.out.println(toString()); }
+
+    /**
+     * @return This coordinate as a string.
+     */
+    public String toString() {
+        return x + " " + y;
+    }
 }

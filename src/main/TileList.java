@@ -32,6 +32,7 @@ public class TileList implements Iterable<Tile> {
         } else {
             throw new InvalidParameterException("Cannot add this tile: There is already a tile with this ID.");
         }
+        tileCount++;
     }
 
     /**
@@ -46,6 +47,7 @@ public class TileList implements Iterable<Tile> {
             throw new InvalidParameterException("Cannot pop this tile: The tile is not in the list.");
         }
         tileArray[id] = null;
+        tileCount--;
         return tile;
     }
 
@@ -62,13 +64,14 @@ public class TileList implements Iterable<Tile> {
      */
     private class TileIterator implements Iterator<Tile> {
         private int index = -1;
+        private int tilesCounted = 0;
 
         /**
          * @return True if there is another Tile to be returned by next().
          */
         @Override
         public boolean hasNext() {
-            return index + 1 < tileArray.length;
+            return tilesCounted < tileCount;
         }
 
         /**
@@ -84,6 +87,7 @@ public class TileList implements Iterable<Tile> {
             if (index >= TileList.this.tileArray.length) {
                 throw new NoSuchElementException("There are no more tiles.");
             }
+            tilesCounted++;
             return TileList.this.tileArray[index];
         }
     }

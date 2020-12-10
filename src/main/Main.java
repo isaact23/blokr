@@ -14,8 +14,13 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        //Display display = new Display();
-        Board board = new Board(8, 8, 1);
+        Display display = new Display();
+        Board board = new Board(12, 12, 1);
+        randomGame();
+    }
+
+    private static void randomGame() {
+        Board board = new Board(12, 12, 1);
         ArrayList<Move> moves;
         Random rand = new Random();
         int randint;
@@ -25,12 +30,14 @@ public class Main {
                 break;
             }
             randint = rand.nextInt(moves.size());
-            board.pushMove(moves.get(randint));
+            Move nextMove = moves.get(randint);
+            nextMove.print();
+            board.pushMove(nextMove);
             board.print();
         }
     }
 
-    private void timeListMoves() {
+    private static void timeListMoves() {
         Board board = new Board(8, 8, 2);
         long startTime = System.nanoTime();
         ArrayList<Move> moves = board.listMoves(0);

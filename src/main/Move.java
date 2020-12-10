@@ -22,4 +22,12 @@ public class Move {
         this.tileOrientation = tileOrientation;
         this.coordinate = coordinate; // Upper-left corner of piece
     }
+
+    /**
+     * Print this move to the terminal.
+     */
+    public void print() {
+        System.out.printf("Player %s, Tile %s, Orientation %s, Coordinate %s%n",
+                player, tile.getId(), tileOrientation, coordinate.toString());
+    }
 }
