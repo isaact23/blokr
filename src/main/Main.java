@@ -1,47 +1,89 @@
 package main;
 
-import org.junit.jupiter.api.MethodOrderer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Random;
+public class Main extends Application {
+    // Object references
+    private Board board;
+    private Rectangle[][] rectangles;
 
-/**
- * 
- * Call other scripts to run the entire engine.
- * 
- * @author Isaac Thompson
- */
-public class Main {
+    // Graphic properties
+    private int boardWidth = 12;
+    private int boardHeight = 12;
+    private int squareSize = 40;
+
+    // Colors
+    private Color backgroundColor = Color.web("#050505");
 
     public static void main(String[] args) {
-        Display display = new Display();
-        Board board = new Board(12, 12, 1);
-        randomGame();
+        launch(args);
     }
 
-    private static void randomGame() {
-        Board board = new Board(12, 12, 1);
-        ArrayList<Move> moves;
-        Random rand = new Random();
-        int randint;
-        while (true) {
-            moves = board.listMoves(0);
-            if (moves.size() == 0) {
-                break;
+    /**
+     * Initialize application.
+     */
+    @Override
+    public void start(Stage primaryStage) {
+        GamePlayer player = new GamePlayer();
+        board = player.randomGame(boardWidth, boardHeight);
+
+        // Initialize JavaFX GUI
+        primaryStage.setTitle("blokr");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(1);
+        grid.setVgap(1);
+        rectangles = new Rectangle[boardWidth][boardHeight];
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
+                Rectangle rec = new Rectangle();
+                rectangles[x][y] = rec;
+                rec.setWidth(squareSize);
+                rec.setHeight(squareSize);
+                rec.setFill(Color.WHITE);
+                GridPane.setRowIndex(rec, x);
+                GridPane.setColumnIndex(rec, y);
+                grid.getChildren().addAll(rec);
             }
-            randint = rand.nextInt(moves.size());
-            Move nextMove = moves.get(randint);
-            nextMove.print();
-            board.pushMove(nextMove);
-            board.print();
         }
+
+        Pane root = new Pane(grid);
+        primaryStage.setScene(new Scene(root, squareSize * boardWidth, squareSize * boardHeight));
+        primaryStage.show();
+        update();
     }
 
-    private static void timeListMoves() {
-        Board board = new Board(8, 8, 2);
-        long startTime = System.nanoTime();
-        ArrayList<Move> moves = board.listMoves(0);
-        long endTime = System.nanoTime();
-        System.out.println("That took " + ((endTime - startTime) / 1000000) + " milliseconds");
+    /**
+     * Update the grid based on the given board.
+     */
+    public void update() {
+        int[][] squares = board.getSquares();
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
+                int square = squares[x][y];
+                Color color = Color.WHITE;
+                switch (square) {
+                    case -1: { break; }
+                    case 0: {
+                        color = Color.BLUE; break;
+                    } case 1: {
+                        color = Color.RED; break;
+                    } case 2: {
+                        color = Color.GREEN; break;
+                    } case 3: {
+                        color = Color.YELLOW; break;
+                    }
+                }
+                rectangles[x][y].setFill(color);
+            }
+        }
+        //primaryStage.show();
     }
 }

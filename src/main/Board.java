@@ -173,6 +173,13 @@ public class Board {
     }
 
     /**
+     * @return This board's grid.
+     */
+    public int[][] getSquares() {
+        return squares;
+    }
+
+    /**
      * Initialize all squares to -1. This eliminates any confusion with
      * the player number (0, 1, 2 or 3).
      */
