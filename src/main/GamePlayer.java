@@ -13,20 +13,28 @@ import java.util.Random;
  */
 public class GamePlayer {
 
-    public Board randomGame(int width, int height) {
-        Board board = new Board(width, height, 1);
+    public Board randomGame(int width, int height, int playerCount) {
+        Board board = new Board(width, height, playerCount);
         ArrayList<Move> moves;
         Random rand = new Random();
         int randint;
+        int playersRemaining;
         while (true) {
-            moves = board.listMoves(0);
-            if (moves.size() == 0) {
+            playersRemaining = playerCount;
+            for (int i = 0; i < playerCount; i++) {
+                moves = board.listMoves(i);
+                if (moves.size() == 0) {
+                    playersRemaining--;
+                } else {
+                    randint = rand.nextInt(moves.size());
+                    Move nextMove = moves.get(randint);
+                    board.pushMove(nextMove);
+                    board.print();
+                }
+            }
+            if (playersRemaining == 0) {
                 break;
             }
-            randint = rand.nextInt(moves.size());
-            Move nextMove = moves.get(randint);
-            board.pushMove(nextMove);
-            board.print();
         }
         return board;
     }

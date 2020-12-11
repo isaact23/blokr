@@ -239,8 +239,8 @@ public class Board {
             case -1: return '-';
             case 0: return 'X';
             case 1: return 'O';
-            case 2: return '#';
-            case 3: return '&';
+            case 2: return '+';
+            case 3: return '*';
         }
         return '-';
     }
