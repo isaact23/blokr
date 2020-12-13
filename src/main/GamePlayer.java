@@ -29,7 +29,6 @@ public class GamePlayer {
                     randint = rand.nextInt(moves.size());
                     Move nextMove = moves.get(randint);
                     board.pushMove(nextMove);
-                    board.print();
                 }
             }
             if (playersRemaining == 0) {

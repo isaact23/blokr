@@ -145,6 +145,23 @@ public class Board {
     }
 
     /**
+     * Evaluate how favorable the position is for each player. Only works correctly in two-player games.
+     * @return An integer, positive favoring player 0, negative favoring player 1.
+     */
+    public int evaluate() {
+        throw new UnsupportedOperationException("evaluate() not implemented yet");
+    }
+
+    /**
+     * Get the tile list for the specified player.
+     * @param player The player whose tile list to retrieve.
+     * @return The tile list.
+     */
+    public TileList getTileList(int player) {
+        return tileListMap.get(player);
+    }
+
+    /**
      * Add the specified move to the board.
      * @param move The move object with tile data, location and player.
      */
@@ -177,6 +194,14 @@ public class Board {
      */
     public int[][] getSquares() {
         return squares;
+    }
+
+    /**
+     * @param move The Move object to analyze
+     * @return True if the move is legal.
+     */
+    private boolean isMoveValid(Move move) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**
