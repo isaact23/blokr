@@ -92,6 +92,13 @@ public class Tile implements Cloneable {
     }
 
     /**
+     * @return Maximum number of ways to orient this tile.
+     */
+    public int getOrientations() {
+        return orientations;
+    }
+
+    /**
      * Rotate and flip the piece to generate all unique sets of coordinates.
      * @param coordinates The coordinates for the squares in the tile.
      * @return A two-dimensional array of all sets of coordinates.

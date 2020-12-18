@@ -2,6 +2,7 @@ package main;
 
 import java.security.InvalidParameterException;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -88,6 +89,21 @@ public class TileList implements Iterable<Tile> {
                 throw new NoSuchElementException("There are no more tiles.");
             }
             tilesCounted++;
+            return TileList.this.tileArray[index];
+        }
+
+        /**
+         * @return The previous non-null tile.
+         */
+        public Tile previous() {
+            index--;
+            while (index >= 0 && TileList.this.tileArray[index] == null) {
+                index--;
+            }
+            if (index < 0) {
+                throw new NoSuchElementException("There are no more tiles.");
+            }
+            tilesCounted--;
             return TileList.this.tileArray[index];
         }
     }

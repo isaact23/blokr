@@ -23,8 +23,7 @@ public class Main extends Application {
     private Iterator<Tile> playerTileIterator;
     private Tile selectedTile;
     private int orientation;
-    private boolean isPlayerTurn = false;
-    private int currentPlayer;
+    private boolean isPlayerTurn = true;
     private Random random = new Random();
 
     // Graphic properties
@@ -52,9 +51,11 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        GamePlayer player = new GamePlayer();
-        //board = new Board(boardWidth, boardHeight, 1);
-        board = player.randomGame(boardWidth, boardHeight, 4);
+        board = new Board(boardWidth, boardHeight, 2);
+        resetPlayerIterator();
+        selectedTile = playerTileIterator.next();
+        //GamePlayer player = new GamePlayer();
+        //board = player.randomGame(boardWidth, boardHeight, 4);
 
         // Initialize JavaFX GUI
         primaryStage.setTitle("blokr");
@@ -85,6 +86,7 @@ public class Main extends Application {
                 grid.getChildren().addAll(rec);
             }
         }
+        // Initialize background
         BackgroundFill backgroundFill = new BackgroundFill(BLACK,
                 CornerRadii.EMPTY, Insets.EMPTY);
         Background background = new Background(backgroundFill);
@@ -102,16 +104,36 @@ public class Main extends Application {
         primaryStage.getScene().setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.A) {
                 System.out.println("Previous tile");
+                //orientation = 0;
             } else if (e.getCode() == KeyCode.D) {
                 System.out.println("Next tile");
+                if (!playerTileIterator.hasNext()) {
+                    resetPlayerIterator();
+                }
+                selectedTile = playerTileIterator.next();
+                orientation = 0;
+                update();
             } else if (e.getCode() == KeyCode.W) {
                 System.out.println("Next orientation");
+                orientation++;
+                if (orientation >= selectedTile.getOrientations()) {
+                    orientation = 0;
+                }
+                update();
             } else if (e.getCode() == KeyCode.S) {
                 System.out.println("Previous orientation");
+                orientation--;
+                if (orientation < 0) {
+                    orientation = selectedTile.getOrientations() - 1;
+                }
+                update();
             }
         });
         primaryStage.getScene().setOnMouseClicked(e -> {
-            //if (e.)
+            Coordinate moveCoord = new Coordinate(mouseGridX, mouseGridY);
+            Move playerMove = new Move(0, selectedTile, orientation, moveCoord);
+            board.pushMove(playerMove);
+            System.out.println("CLICK!");
         });
     }
 
@@ -140,36 +162,28 @@ public class Main extends Application {
             }
         }
         if (isPlayerTurn) {
-            if (playerTileIterator == null || !playerTileIterator.hasNext()) {
-                playerTileIterator = board.getTileList(currentPlayer).iterator();
-                selectedTile = playerTileIterator.next();
+            for (Coordinate tileCoord : selectedTile.getCoordinates(orientation)) {
+                int x = mouseGridX + tileCoord.x;
+                int y = mouseGridY + tileCoord.y;
+                if (x < boardWidth && y < boardHeight) {
+                    rectangles[x][y].setFill(BLUE);
+                }
             }
-            rectangles[mouseGridX][mouseGridY].setFill(BLACK);
         }
+    }
+
+    /**
+     * Get a new iterator for the player.
+     */
+    private void resetPlayerIterator() {
+        playerTileIterator = board.getTileList(0).iterator();
     }
 
     /**
      * Create the grid of rectangles to replace the game settings GUI.
      */
-    public void initializeGameWindow() {
+    private void initializeGameWindow() {
         throw new UnsupportedOperationException("initializeGameWindow() not implemented yet");
-    }
-
-    /**
-     * Alternate between Player and CPU.
-     */
-    public void gameLoop() throws InterruptedException {
-        while (true) {
-            if (!playerTurn(0)) {
-                break;
-            }
-            while (isPlayerTurn) {
-                Thread.sleep(100);
-            }
-            if (!cpuTurn(1)) {
-                break;
-            }
-        }
     }
 
     /**
@@ -177,9 +191,11 @@ public class Main extends Application {
      * @param player The player index to play as.
      * @return Whether the player is able to move.
      */
-    public boolean playerTurn(int player) {
-        currentPlayer = player;
+    private boolean playerTurn(int player) {
+        System.out.println("Player turn");
         isPlayerTurn = true;
+        ArrayList<Move> moveList = board.listMoves(player);
+        return moveList.size() > 0;
     }
 
     /**
@@ -187,7 +203,7 @@ public class Main extends Application {
      * @param player The player index to play as.
      * @return Whether the CPU is able to move.
      */
-    public boolean cpuTurn(int player) {
+    private boolean cpuTurn(int player) {
         ArrayList<Move> moves;
         Random rand = new Random();
         moves = board.listMoves(player);
@@ -197,5 +213,6 @@ public class Main extends Application {
         int randint = rand.nextInt(moves.size());
         Move nextMove = moves.get(randint);
         board.pushMove(nextMove);
+        return true;
     }
 }

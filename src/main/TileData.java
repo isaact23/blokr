@@ -100,7 +100,7 @@ public class TileData {
                 coordinates[3] = new Coordinate(1, 1); break;
             } case 8: {
                 canFlip = true;
-                rotations = 4;
+                rotations = 2;
                 coordinates[1] = new Coordinate(1, 0);
                 coordinates[2] = new Coordinate(1, 1);
                 coordinates[3] = new Coordinate(2, 1); break;

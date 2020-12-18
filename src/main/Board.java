@@ -165,7 +165,6 @@ public class Board {
      * Add the specified move to the board.
      * @param move The move object with tile data, location and player.
      */
-    // TODO: Add new legal squares
     public void pushMove(Move move) {
         Tile tile = move.tile;
         Coordinate[] coordinates = tile.getCoordinates(move.tileOrientation);
