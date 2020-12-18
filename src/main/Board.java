@@ -73,11 +73,11 @@ public class Board {
                 Coordinate boundingCoord = Tile.getBoundingCoord(coordinates);
                 for (int x = 0; x < width - boundingCoord.x; x++) {
                     for (int y = 0; y < height - boundingCoord.y; y++) {
+                        // TODO: Call private method isMoveValid().
                         boolean selfCorner = false; // Must be true
                         boolean startingPoint = false; // Can be true to substitute selfCorner
                         boolean selfEdge = false; // Must be false
                         boolean overlap = false; // Must be false
-
                         // Iterate through squares in this set of coordinates; ensure all represent legal positions
                         for (int j = 0; j < coordinates.length; j++) {
                             Coordinate coord = coordinates[j];
@@ -145,6 +145,17 @@ public class Board {
     }
 
     /**
+     * Check if a move is legal.
+     * @param move The move to analyze.
+     * @return True if the move is legal.
+     */
+    public boolean isMoveValid(Move move) {
+        int orientation = move.tileOrientation;
+        Coordinate[] tileCoordinates = move.tile.getCoordinates(orientation);
+        return isMoveValid(move.player, orientation, move.coordinate, tileCoordinates);
+    }
+
+    /**
      * Evaluate how favorable the position is for each player. Only works correctly in two-player games.
      * @return An integer, positive favoring player 0, negative favoring player 1.
      */
@@ -196,11 +207,77 @@ public class Board {
     }
 
     /**
-     * @param move The Move object to analyze
+     * Determine if a given move is legal.
+     * @param player The player who is making the move.
+     * @param tileOrientation The orientation of the tile for this move.
+     * @param moveCoordinate The top-left coordinate of the move.
+     * @param tileCoordinates The coordinates of the squares within the tile.
      * @return True if the move is legal.
      */
-    private boolean isMoveValid(Move move) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    private boolean isMoveValid(int player, int tileOrientation,
+                                Coordinate moveCoordinate, Coordinate[] tileCoordinates) {
+        boolean validStartingPoint = false;
+
+        // Iterate through squares in this set of coordinates; ensure all represent legal positions
+        for (int i = 0; i < tileCoordinates.length; i++) {
+
+            // Get coordinates of the square we need to check
+            Coordinate tileCoordinate = tileCoordinates[i];
+            int x = moveCoordinate.x + tileCoordinate.x;
+            int y = moveCoordinate.y + tileCoordinate.y;
+
+            // Make sure the tile is on the board
+            if (x < 0 || y < 0 || x >= width || y >= height) {
+                return false;
+            }
+            // Check if we're starting in our corner
+            if (legalSquares[x][y][player]) {
+                validStartingPoint = true;
+            }
+            // Check for overlap
+            if (squares[x][y] != -1) {
+                return false; // Overlap
+            }
+            // Check corners/edges
+            if (x > 0) {
+                if (squares[x - 1][y] == player) {
+                    return false;
+                }
+                if (y > 0) {
+                    if (squares[x - 1][y - 1] == player) {
+                        validStartingPoint = true;
+                    }
+                }
+                if (y < height - 1) {
+                    if (squares[x - 1][y + 1] == player) {
+                        validStartingPoint = true;
+                    }
+                }
+            }
+            if (y > 0 && squares[x][y - 1] == player) {
+                return false;
+            }
+            if (y < height - 1 && squares[x][y + 1] == player) {
+                return false;
+            }
+            if (x < width - 1) {
+                if (squares[x + 1][y] == player) {
+                    return false;
+                }
+                if (y > 0) {
+                    if (squares[x + 1][y - 1] == player) {
+                        validStartingPoint = true;
+                    }
+                }
+                if (y < height - 1) {
+                    if (squares[x + 1][y + 1] == player) {
+                        validStartingPoint = true;
+                    }
+                }
+            }
+        }
+        // If the move passes the checks, add to list
+        return validStartingPoint;
     }
 
     /**

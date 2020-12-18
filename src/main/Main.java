@@ -107,12 +107,7 @@ public class Main extends Application {
                 //orientation = 0;
             } else if (e.getCode() == KeyCode.D) {
                 System.out.println("Next tile");
-                if (!playerTileIterator.hasNext()) {
-                    resetPlayerIterator();
-                }
-                selectedTile = playerTileIterator.next();
-                orientation = 0;
-                update();
+                selectNextTile();
             } else if (e.getCode() == KeyCode.W) {
                 System.out.println("Next orientation");
                 orientation++;
@@ -130,10 +125,7 @@ public class Main extends Application {
             }
         });
         primaryStage.getScene().setOnMouseClicked(e -> {
-            Coordinate moveCoord = new Coordinate(mouseGridX, mouseGridY);
-            Move playerMove = new Move(0, selectedTile, orientation, moveCoord);
-            board.pushMove(playerMove);
-            System.out.println("CLICK!");
+            moveAtMouse();
         });
     }
 
@@ -161,7 +153,7 @@ public class Main extends Application {
                 rectangles[x][y].setFill(color);
             }
         }
-        if (isPlayerTurn) {
+        if (isPlayerTurn && selectedTile != null) {
             for (Coordinate tileCoord : selectedTile.getCoordinates(orientation)) {
                 int x = mouseGridX + tileCoord.x;
                 int y = mouseGridY + tileCoord.y;
@@ -205,14 +197,56 @@ public class Main extends Application {
      */
     private boolean cpuTurn(int player) {
         ArrayList<Move> moves;
-        Random rand = new Random();
         moves = board.listMoves(player);
         if (moves.size() == 0) {
             return false;
         }
-        int randint = rand.nextInt(moves.size());
+        int randint = random.nextInt(moves.size());
         Move nextMove = moves.get(randint);
         board.pushMove(nextMove);
+        update();
+        playerTurn(0);
         return true;
+    }
+
+    /**
+     * Select the next tile the player has.
+     */
+    private void selectNextTile() {
+        if (!playerTileIterator.hasNext()) {
+            resetPlayerIterator();
+        }
+        if (playerTileIterator.hasNext()) {
+            orientation = 0;
+            selectedTile = playerTileIterator.next();
+            update();
+        } else {
+            selectedTile = null;
+        }
+    }
+
+    /**
+     * Select the previous tile the player has.
+     */
+    private void selectPreviousTile() {
+        System.out.println("Can't select previous tile yet!");
+    }
+
+    /**
+     * Put the player's tile at the mouse location, if possible.
+     */
+    private void moveAtMouse() {
+        if (selectedTile != null) {
+            Coordinate moveCoord = new Coordinate(mouseGridX, mouseGridY);
+            Move playerMove = new Move(0, selectedTile, orientation, moveCoord);
+            if (board.isMoveValid(playerMove)) {
+                System.out.println("That move was legal!");
+                board.pushMove(playerMove);
+                selectNextTile();
+                cpuTurn(1);
+            } else {
+                System.out.println("Bro you can't go there");
+            }
+        }
     }
 }
