@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  *
- * Call other scripts to run the entire engine.
+ * Generate a game and output a Board object.
  *
  * @author Isaac Thompson
  */

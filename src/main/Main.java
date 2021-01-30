@@ -27,10 +27,10 @@ public class Main extends Application {
     private Random random = new Random();
 
     // Graphic properties
-    private int boardWidth = 20;
-    private int boardHeight = 20;
-    private int squareSize = 30;
-    private int spacing = 2;
+    private final int boardWidth = 24;
+    private final int boardHeight = 24;
+    private final int squareSize = 30;
+    private final int spacing = 2;
     private int mouseGridX = 0;
     private int mouseGridY = 0;
 
@@ -199,12 +199,14 @@ public class Main extends Application {
         ArrayList<Move> moves;
         moves = board.listMoves(player);
         if (moves.size() == 0) {
+            System.out.println("CPU could not make move");
             return false;
         }
         int randint = random.nextInt(moves.size());
         Move nextMove = moves.get(randint);
         board.pushMove(nextMove);
         update();
+        System.out.println("CPU made move");
         playerTurn(0);
         return true;
     }

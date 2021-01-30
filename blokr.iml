@@ -25,6 +25,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="jdk 15.0.1" level="project" />
     <orderEntry type="library" name="JavaFX SDK 15.0.1" level="project" />
   </component>
 </module>
